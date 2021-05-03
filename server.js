@@ -32,7 +32,7 @@ http.createServer((request, response) => {
             throw err;
         }
 
-        // 
+        // Add information to the response, then end the response
         response.writeHead(200, { 'Content-Type': 'text/html' });
         response.write(data);
         response.end();
