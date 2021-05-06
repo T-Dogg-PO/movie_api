@@ -52,7 +52,6 @@ app.get('/movies/:title', (req, res) => {
     res.json(topMovies.find((movie) => {
         return movie.title === req.params.title;
     }));
-    // res.send('Successful GET request, this will return a single movie matching the title');
 });
 
 // GET route for endpoint /movies/:genre - will return detailed data about a movie genre by genre name
