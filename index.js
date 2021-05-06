@@ -55,12 +55,12 @@ app.get('/movies/:title', (req, res) => {
 });
 
 // GET route for endpoint /movies/:genre - will return detailed data about a movie genre by genre name
-app.get('/movies/:genre', (req, res) => {
+app.get('/movies/genres/:genre', (req, res) => {
     res.send('Successful GET request, this will return details about a genre of movies');
 });
 
 // GET route for endpoint /movies/:director - will return detailed data about a director by name
-app.get('/movies/:director', (req, res) => {
+app.get('/movies/directors/:director', (req, res) => {
     res.send('Successful GET request, this will return details about the specified director');
 });
 
