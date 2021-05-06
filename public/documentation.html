@@ -4,11 +4,125 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Import Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>
 
     <body>
         <h1>Title: Movie Directory</h1>
         <h2>Introduction:</h2>
         <p>This project will be a web application that allows users to find information about movies (e.g. movies, directors, genres etc). To this end, I will be building a REST API that interacts with a movies database to get relevant movie information.</p>
+
+        <h2>API Documentation:</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Request Description</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">HTTP Method</th>
+                    <th scope="col">Request Body Data Format</th>
+                    <th scope="col">Response Body Data Format</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Get a complete list of movies in the database</td>
+                    <td>/movies</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about all the movies in the database.</td>
+                </tr>
+                <tr>
+                    <td>Get information about a single movie by name</td>
+                    <td>/movies/[title]</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about the specified movie.<br>
+                        Example response:<br>
+                        {
+                            To be filled when I know what data will be in database
+                        }
+                        </td>
+                </tr>
+                <tr>
+                    <td>Get information about a genre of movie</td>
+                    <td>/movies/[genre]</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about the specified genre.<br>
+                        Example response:<br>
+                        {
+                            To be filled when I know what data will be in database
+                        }
+                        </td>
+                </tr>
+                <tr>
+                    <td>Get information about a director</td>
+                    <td>/movies/[director]</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about the specified director.<br>
+                        Example response:<br>
+                        {
+                            To be filled when I know what data will be in database
+                        }
+                        </td>
+                </tr>
+                <tr>
+                    <td>Register a new user</td>
+                    <td>/users/[user]</td>
+                    <td>POST</td>
+                    <td>A JSON object specifying the username.<br>
+                        Example:<br>
+                        {<br>
+                            username: "Joe Blogs",<br>
+                        }</td>
+                    <td>A JSON object holding data about new user, including a newly added ID.<br>
+                        Example response:<br>
+                        {<br>
+                            username: "Joe Blogs",<br>
+                            id: 3,<br>
+                        }</td>
+                </tr>
+                <tr>
+                    <td>Update a username</td>
+                    <td>/users/[user]</td>
+                    <td>PUT</td>
+                    <td>A JSON object specifying the id of an existing user with a new usersame.<br>
+                        Example:<br>
+                        {<br>
+                            username: "Tom Jones",<br>
+                            id: 3,<br>
+                        }</td>
+                    <td>A JSON object holding data about new user, including a newly added ID.<br>
+                        Example response:<br>
+                        {<br>
+                            username: "Tom Jones",<br>
+                            id: 3,<br>
+                        }</td>
+                </tr>
+                <tr>
+                    <td>Add a movie to a users Favourites list</td>
+                    <td>/users/[user]/favourites/[movie]</td>
+                    <td>POST</td>
+                    <td>None</td>
+                    <td>A text message indicating that the movie was successfully added to this users favourites list.</td>
+                </tr>
+                <tr>
+                    <td>Remove a movie to a users Favourites list</td>
+                    <td>/users/[user]/favourites/[movie]</td>
+                    <td>DELETE</td>
+                    <td>None</td>
+                    <td>A text message indicating that the movie was successfully removed from this users favourites list.</td>
+                </tr>
+                <tr>
+                    <td>Remove a user</td>
+                    <td>/users/[user]</td>
+                    <td>DELETE</td>
+                    <td>None</td>
+                    <td>A text message indicating that the user was successfully removed.</td>
+                </tr>
+            </tbody>
+        </table>
     </body>
 </html>
