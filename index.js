@@ -1,7 +1,14 @@
 // Import Express and morgan
 const express = require('express'),
     bodyParser = require('body-parser'),
-    morgan = require('morgan');
+    morgan = require('morgan'),
+    mongoose = require('mongoose'),
+    Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
 
@@ -44,49 +51,196 @@ app.get('/', (req, res) => {
 
 // GET route for endpoint /movies - will return a list of all movies
 app.get('/movies', (req, res) => {
-    res.json(topMovies);
+    // Find all movies in the database (db.movies), then either return a success status with json formatted movies, or run the error catching function
+    Movies.find().then((movies) => {
+        res.status(201).json(movies);
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
-// GET route for endpoint /movies/:title - will return detailed data about a specific movie by title
-app.get('/movies/:title', (req, res) => {
-    res.json(topMovies.find((movie) => {
-        return movie.title === req.params.title;
-    }));
+// GET route for endpoint /movies/:Title - will return detailed data about a specific movie by title
+app.get('/movies/:Title', (req, res) => {
+    // Find a matching movie based on the title, then send the movie details in json format to the client
+    Movies.findOne({ Title: req.params.Title }).then((movie) => {
+        res.json(movie);
+    // If errors are found run the error catching function
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
-// GET route for endpoint /movies/:genre - will return detailed data about a movie genre by genre name
-app.get('/movies/genres/:genre', (req, res) => {
-    res.send('Successful GET request, this will return details about a genre of movies');
+// GET route for endpoint /movies/:Genre - will return detailed data about a movie genre by genre name
+app.get('/movies/genres/:Genre', (req, res) => {
+    // Find a matching genre based on the genre name passed in the URL, then send the genre details in json format to the client
+    // This will be found from the db.movies collection, but we will obtain all information about a genre we need from a single entry
+    Movies.findOne({ 'Genre.Name': req.params.Genre }).then((movie) => {
+        res.json(movie.Genre);
+    // If errors are found run the error catching function
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: '+ err);
+    });
 });
 
-// GET route for endpoint /movies/:director - will return detailed data about a director by name
-app.get('/movies/directors/:director', (req, res) => {
-    res.send('Successful GET request, this will return details about the specified director');
+// GET route for endpoint /movies/directors/:Director - will return detailed data about a director by name
+app.get('/movies/directors/:Director', (req, res) => {
+    // Find a matching director based on the director name passed in the URL, then send the director details in json format ot the client
+    // This will be found from the db.mobies collection, but we will obtain all information about a genre we need from a single entry
+    Movies.findOne({ 'Director.Name': req.params.Director }).then((movie) => {
+        res.json(movie.Director);
+    // If errors are found run the error catching function
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
-// POST route for endpoint users/:user - will allow a new user to register
-app.post('/users/:user', (req, res) => {
-    res.send('Successful POST request, this will create a new user in the database!');
+// POST route for endpoint users/ - will allow a new user to register
+/* The JSON for this POST request will come in the following format:
+{
+    iD: Integer,
+    Username: String,
+    Password: String,
+    Email: String,
+    Birthday: Date
+} */
+app.post('/users', (req, res) => {
+    // Check to see if the given Username is already taken in db.users
+    Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+        // If Username is taken, return response to client
+        if (user) {
+            return res.status(400).send(req.body.Username + ' already exists');
+        // If it's not taken, create an entry in db.users
+        } else {
+            Users.create({
+                Username: req.body.Username,
+                Password: req.body.Password,
+                Email: req.body.Email,
+                Birthday: req.body.Birthday
+            // Callback to send response to client with status code and the document for the new User
+            }).then((user) => { res.status(201).json(user) })
+            // Error handling function for creating the user
+            .catch((error) => {
+                console.error(error);
+                res.status(500).send('Error: ' + error);
+            })
+        }
+    // Error handling function for querying the database
+    }).catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+    });
 });
 
-// PUT route for endpoint users/:user - will allow a user to update their username
-app.put('/users/:user', (req, res) => {
-    res.send('Successful PUT request, this will update the username of an existing user');
+// GET route for endpoint users/ - will return a list of all users in the database
+app.get('/users', (req, res) => {
+    // Find all users in the database (db.users), then either return a success status with the json formatted users, or run the error catching function
+    Users.find().then((users) => {
+        res.status(201).json(users);
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
-// POST route for endpoint users/:user/favourites/:movie - will allow a user to add a movie to their list of favourites by movie title
-app.post('/users/:user/favourites/:movie', (req, res) => {
-    res.send('Successful POST request, this will add the specified movie to this users favourites list.');
+// GET route for endpoint usres/:Username - will return the details for a single user by username
+app.get('/users/:Username', (req, res) => {
+    // Find a matching user based on the username, then send the user in json format to the client
+    Users.findOne({ Username: req.params.Username }).then((user) => {
+        res.json(user);
+    // Otherwise run the error catching function
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
-// DELETE route for endpoint users/:user/favourites/:movie - will allow a user to remove a movie from their list of favourites by movie title
-app.delete('/users/:user/favourites/:movie', (req, res) => {
-    res.send('Successful DELETE request, this will remove a movie from this users favourites list.');
+
+// PUT route for endpoint users/:Username - will allow a user to update their username
+/* We expect JSON in this format:
+{
+    Username: String (required),
+    Password: String (required),
+    Email: String (required),
+    Birthday: Date
+} */
+app.put('/users/:Username', (req, res) => {
+    // Use the findOneAndUpdate function to find the user document based on the username, then update it using $set:
+    Users.findOneAndUpdate({ Username: req.params.Username }, { $set: 
+        {
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+        }
+    },
+    // Ensure the updated document is returned by specifying that the callback function will take the updated object as a parameter
+    // Then send the updated user in json format back to the client
+    { new: true}).then((updatedUser) => {
+        res.json(updatedUser);
+    // If errors are found run the error catching function
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
-// DELETE route for endpoint users/:user - will allow a user to deregister
-app.delete('/users/:user', (req, res) => {
-    res.send('Successful DELETE request, this will remove a user from the database');
+// POST route for endpoint /users/:Username/Movies/:MovieID - will allow a user to add a movie to their list of favourites by movie title
+app.post('/users/:Username/Movies/:MovieID', (req, res) => {
+    // Find and updated one user document based on given username
+    Users.findOneAndUpdate({ Username: req.params.Username }, {
+        // Push will add a new movie ID to the FavouriteMovies array
+        $push: { FavouriteMovies: req.params.MovieID }
+    },
+    // Ensure the updated docuemnt is returned by specifying that the callback function will take the updated object as a parameter
+    // Then send the updated user in json format back to the client
+    { new: true }).then((updatedUser) => {
+        res.json(updatedUser);
+    // If errors are found run the error catching function
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+});
+
+// DELETE route for endpoint users/:Username/Movies/:MovieID - will allow a user to remove a movie from their list of favourites by movie title
+app.delete('/users/:Username/Movies/:MovieID', (req, res) => {
+    // Find and update one user document based on a given username
+    Users.findOneAndUpdate({ Username: req.params.Username }, {
+        // Pull will remove this movie ID from the FavouriteMovies array
+        $pull: { FavouriteMovies: req.params.MovieID }
+    },
+    // Ensure the updated docuemnt is returned by specifying that the callback function will take the updated object as a parameter
+    // Then send the updated user in json format back to the client
+    { new: true }).then((updatedUser) => {
+        res.json(updatedUser);
+    // If errors are found run the error catching function
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+});
+
+// DELETE route for endpoint users/:Username - will allow a user to deregister
+app.delete('/users/:Username', (req, res) => {
+    // Use findOneAndRemove to find a user document by Username and then delete it
+    Users.findOneAndRemove({ Username: req.params.Username }).then((user) => {
+        // If no user is found, return the message that it wasn't found
+        if (!user) {
+            res.status(400).send(req.params.Username + ' was not found');
+        // Otherwise, return a success message
+        } else {
+            res.status(200).send(req.params.Username + ' was deleted');
+        }
+    // Error handling function
+    }).catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
 // Error handling function

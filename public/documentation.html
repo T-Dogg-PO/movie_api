@@ -30,94 +30,239 @@
                     <td>/movies</td>
                     <td>GET</td>
                     <td>None</td>
-                    <td>A JSON object holding data about all the movies in the database.</td>
+                    <td>An array of JSON objects holding data about all the movies in the database.<br>
+                        Example response:<br>
+                        [{<br>
+                            "Genre": {<br>
+                                "Name": "Thriller",<br>
+                                "Description": "Thriller film, also known as suspense film or suspense thriller, is a broad film genre that involves excitement and suspense in the audience."<br>
+                            },<br>
+                            "Director": {<br>
+                                "Name": "Jonathan Demme",<br>
+                                "Bio": "Robert Jonathan Demme was an American director, producer, and screenwriter.",<br>
+                                "Birth": "1944-01-01T00:00:00.000Z",<br>
+                                "Death": "2017-01-01T00:00:00.000Z"<br>
+                            },<br>
+                            "Actors": [],<br>
+                            "_id": "6099224b7db599dd0bf173d5",<br>
+                            "Title": "Silence of the Lambs",<br>
+                            "Description": "A young FBI cadet must receive the help of an incarcerated and manipulative cannibal killer.",<br>
+                            "ImagePath": "silenceofthelambs.png",<br>
+                            "Featured": true<br>
+                        },<br>
+                        {<br>
+                            "Genre": {<br>
+                                "Name": "Sci-Fi",<br>
+                                "Description": "Science fiction (sometimes shortened to sci-fi or SF) is a genre of speculative fiction that typically deals with imaginative and futuristic concepts such as advanced science and technology, space exploration, time travel, parallel universes, and extraterrestrial life."<br>
+                            },<br>
+                            "Director": {<br>
+                                "Name": "George Lucas",<br>
+                                "Bio": "George Walton Lucas Jr. (born May 14, 1944) is an American film director, producer, screenwriter, and entrepreneur. Lucas is best known for creating the Star Wars and Indiana Jones franchises and founding Lucasfilm, LucasArts, and Industrial Light & Magic. Star Wars was a mixed bag of success",<br>
+                                "Birth": "1944-05-14T00:00:00.000Z"<br>
+                            },<br>
+                            "Actors": [],<br>
+                            "_id": "6099286d7db599dd0bf173d6",<br>
+                            "Title": "Star Wars: Episode IV - A New Hope",<br>
+                            "Description": "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station, while also attempting to rescue Princess Leia from the mysterious Darth Vader and his red lightsaber.",<br>
+                            "ImagePath": "starwars4.png",<br>
+                            "Featured": true<br>
+                        }]</td>
                 </tr>
                 <tr>
                     <td>Get information about a single movie by name</td>
-                    <td>/movies/[title]</td>
+                    <td>/movies/[Title]</td>
                     <td>GET</td>
                     <td>None</td>
                     <td>A JSON object holding data about the specified movie.<br>
                         Example response:<br>
-                        {
-                            To be filled when I know what data will be in database
+                        {<br>
+                            "Genre": {<br>
+                                "Name": "Adventure",<br>
+                                "Description": "Adventure films are a genre of film whose plots feature elements of travel. They typically involve protagonists who must leave their home or place of comfort and go to far away lands to fulfill a goal. Settings play an important role in adventure films, sometimes as big as the characters themselves."<br>
+                            },<br>
+                            "Director": {<br>
+                                "Name": "Robert Zemeckis",<br>
+                                "Bio": "A whiz-kid with special effects, Robert is from the Spielberg camp of film-making (Steven Spielberg produced many of his films). Usually working with writing partner Bob Gale, Robert's earlier films show he has a talent for zany comedy (Romancing the Stone (1984), 1941 (1979)) and special effect vehicles (Who Framed Roger Rabbit (1988) and Back to the Future (1985)). His later films have become more serious, with the hugely successful Tom Hanks vehicle Forrest Gump (1994) and the Jodie Foster film Contact (1997), both critically acclaimed movies. Again, these films incorporate stunning effects. Robert has proved he can work a serious story around great effects.",<br>
+                                "Birth": "1951-05-14T00:00:00.000Z"<br>
+                            },<br>
+                            "Actors": [],<br>
+                            "_id": "60992a0a7db599dd0bf173d9",<br>
+                            "Title": "Back to the Future",<br>
+                            "Description": "Marty McFly, a 17-year-old high school student, is accidentally sent thirty years into the past in a time-traveling DeLorean invented by his close friend, the eccentric scientist Doc Brown.",<br>
+                            "ImagePath": "backtothefuture1.png",<br>
+                            "Featured": false<br>
                         }
                         </td>
                 </tr>
                 <tr>
                     <td>Get information about a genre of movie</td>
-                    <td>/movies/genres/[genre]</td>
+                    <td>/movies/genres/[Genre]</td>
                     <td>GET</td>
                     <td>None</td>
                     <td>A JSON object holding data about the specified genre.<br>
                         Example response:<br>
-                        {
-                            To be filled when I know what data will be in database
+                        {<br>
+                            "Name": "Adventure",<br>
+                            "Description": "Adventure films are a genre of film whose plots feature elements of travel. They typically involve protagonists who must leave their home or place of comfort and go to far away lands to fulfill a goal. Settings play an important role in adventure films, sometimes as big as the characters themselves."<br>
                         }
                         </td>
                 </tr>
                 <tr>
                     <td>Get information about a director</td>
-                    <td>/movies/directors/[director]</td>
+                    <td>/movies/directors/[Director]</td>
                     <td>GET</td>
                     <td>None</td>
                     <td>A JSON object holding data about the specified director.<br>
                         Example response:<br>
-                        {
-                            To be filled when I know what data will be in database
+                        {<br>
+                            "Name": "George Lucas",<br>
+                            "Bio": "George Walton Lucas Jr. (born May 14, 1944) is an American film director, producer, screenwriter, and entrepreneur. Lucas is best known for creating the Star Wars and Indiana Jones franchises and founding Lucasfilm, LucasArts, and Industrial Light & Magic. Star Wars was a mixed bag of success",<br>
+                            "Birth": "1944-05-14T00:00:00.000Z"<br>
                         }
                         </td>
                 </tr>
                 <tr>
                     <td>Register a new user</td>
-                    <td>/users/[user]</td>
+                    <td>/users</td>
                     <td>POST</td>
-                    <td>A JSON object specifying the username.<br>
+                    <td>A JSON object specifying the username, password, email and optionally date of birth for a new user.<br>
                         Example:<br>
                         {<br>
-                            username: "Joe Blogs",<br>
+                            "Username": "karen",<br>
+                            "Password": "24234",<br>
+                            "Email": "karen@example.com",<br>
+                            "Birthday": "1990/01/10"<br>
                         }</td>
                     <td>A JSON object holding data about new user, including a newly added ID.<br>
                         Example response:<br>
                         {<br>
-                            username: "Joe Blogs",<br>
-                            id: 3,<br>
+                            "FavouriteMovies": [],<br>
+                            "_id": "609a8b0c87e6ef55a034a4a5",<br>
+                            "Username": "karen",<br>
+                            "Password": "24234",<br>
+                            "Email": "karen@example.com",<br>
+                            "Birthday": "1990-01-09T23:00:00.000Z",<br>
+                            "__v": 0<br>
                         }</td>
                 </tr>
                 <tr>
-                    <td>Update a username</td>
-                    <td>/users/[user]</td>
-                    <td>PUT</td>
-                    <td>A JSON object specifying the id of an existing user with a new usersame.<br>
-                        Example:<br>
-                        {<br>
-                            username: "Tom Jones",<br>
-                            id: 3,<br>
-                        }</td>
-                    <td>A JSON object holding data about new user, including a newly added ID.<br>
+                    <td>Get a list of all users and their details</td>
+                    <td>/users</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A list of JSON objects holding data about the user.<br>
+                        Example response:<br>
+                        [<br>
+                            {<br>
+                                "FavouriteMovies": [<br>
+                                    [<br>
+                                        "60992cea7db599dd0bf173df",<br>
+                                        "60992d187db599dd0bf173e0",<br>
+                                        "60992d467db599dd0bf173e1"<br>
+                                    ]<br>
+                                ],<br>
+                                "_id": "60992e3e7db599dd0bf173e2",<br>
+                                "Username": "thomas",<br>
+                                "Password": "password1234",<br>
+                                "Email": "thomas@example.com",<br>
+                                "Birth": "1990-01-01T00:00:00.000Z"<br>
+                            },<br>
+                            {<br>
+                                "FavouriteMovies": [<br>
+                                    [<br>
+                                        "60992cea7db599dd0bf173df",<br>
+                                        "60992d187db599dd0bf173e0",<br>
+                                        "60992d467db599dd0bf173e1"<br>
+                                    ]<br>
+                                ],<br>
+                                "_id": "60992e9e7db599dd0bf173e4",<br>
+                                "Username": "emily",<br>
+                                "Password": "emilypassword",<br>
+                                "Email": "emily@example.com",<br>
+                                "Birth": "1925-04-21T00:00:00.000Z"<br>
+                            }
+                        ]</td>
+                </tr>
+                <tr>
+                    <td>Get information about a single user</td>
+                    <td>/users/[Username]</td>
+                    <td>GET</td>
+                    <td>None</td>
+                    <td>A JSON object holding data about the user.<br>
                         Example response:<br>
                         {<br>
-                            username: "Tom Jones",<br>
-                            id: 3,<br>
+                            "FavouriteMovies": [],<br>
+                            "_id": "609a8b0c87e6ef55a034a4a5",<br>
+                            "Username": "karen",<br>
+                            "Password": "24234",<br>
+                            "Email": "karen@example.com",<br>
+                            "Birthday": "1990-01-09T23:00:00.000Z",<br>
+                            "__v": 0<br>
+                        }</td>
+                </tr>
+                <tr>
+                    <td>Update a users details</td>
+                    <td>/users/[Username]</td>
+                    <td>PUT</td>
+                    <td>A JSON object specifying the users details (including updates)<br>
+                        Example:<br>
+                        {<br>
+                            "Username": "karen_updated",<br>
+                            "Password": "24234_updated",<br>
+                            "Email": "karen@example.com",<br>
+                            "Birthday": "1990/01/10"<br>
+                        }</td>
+                    <td>A JSON object holding data about the user with updated details.<br>
+                        Example response:<br>
+                        {<br>
+                            "FavouriteMovies": [],<br>
+                            "_id": "609a8b0c87e6ef55a034a4a5",<br>
+                            "Username": "karen_updated",<br>
+                            "Password": "24234_updated",<br>
+                            "Email": "karen@example.com",<br>
+                            "Birthday": "1990-01-09T23:00:00.000Z",<br>
+                            "__v": 0<br>
                         }</td>
                 </tr>
                 <tr>
                     <td>Add a movie to a users Favourites list</td>
-                    <td>/users/[user]/favourites/[movie]</td>
+                    <td>/users/[Username]/movies/[MovieID]</td>
                     <td>POST</td>
                     <td>None</td>
-                    <td>A text message indicating that the movie was successfully added to this users favourites list.</td>
+                    <td>A JSON object holding data about the user with updated details.<br>
+                        Example response:<br>
+                        {<br>
+                            "FavouriteMovies": [
+                                "6099286d7db599dd0bf173d6"
+                            ],<br>
+                            "_id": "609a8b0c87e6ef55a034a4a5",<br>
+                            "Username": "karen_updated",<br>
+                            "Password": "24234_updated_22r2",<br>
+                            "Email": "karen@example.com",<br>
+                            "Birthday": "1990-01-09T23:00:00.000Z",<br>
+                            "__v": 0<br>
+                        }</td>
                 </tr>
                 <tr>
                     <td>Remove a movie to a users Favourites list</td>
-                    <td>/users/[user]/favourites/[movie]</td>
+                    <td>/users/[Username]/movies/[MovieID]</td>
                     <td>DELETE</td>
                     <td>None</td>
-                    <td>A text message indicating that the movie was successfully removed from this users favourites list.</td>
+                    <td>A JSON object holding data about the user with updated details.<br>
+                        Example response:<br>
+                        {<br>
+                            "FavouriteMovies": [],<br>
+                            "_id": "609a98921cdbe42ef4de697a",<br>
+                            "Username": "Karen",<br>
+                            "Password": "password1234",<br>
+                            "Email": "karen@example.com",<br>
+                            "Birthday": "1990-01-09T23:00:00.000Z",<br>
+                            "__v": 0<br>
+                        }</td>
                 </tr>
                 <tr>
                     <td>Remove a user</td>
-                    <td>/users/[user]</td>
+                    <td>/users/[Username]</td>
                     <td>DELETE</td>
                     <td>None</td>
                     <td>A text message indicating that the user was successfully removed.</td>
