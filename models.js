@@ -7,12 +7,12 @@ let movieSchema = mongoose.Schema({
     Title: {type: String, required: true},
     // Description is a string, required
     Description: {type: String, required: true},
-    // Genre has two parameters, Name string and Description string. None required
+    // Genre has two key-value pairs, Name string and Description string. None required
     Genre: {
         Name: String,
         Description: String
     },
-    // Director has four parameters, Name string, Bio string, Birth and Death dates . None required
+    // Director has four key-value pairs, Name string, Bio string, Birth and Death dates . None required
     Director: {
         Name: String,
         Bio: String,

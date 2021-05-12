@@ -1,45 +1,29 @@
-// Import Express and morgan
+// Import required modules
 const express = require('express'),
     bodyParser = require('body-parser'),
     morgan = require('morgan'),
     mongoose = require('mongoose'),
-    Models = require('./models.js');
+    Models = require('./models.js'),
+    passport = require('passport');
 
+require('./passport');
+
+// Declare variables for the data models
 const Movies = Models.Movie;
 const Users = Models.User;
 
+// Connect to our Mongo database through mongoose
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
 
 app.use(bodyParser.json());
 
+// Import auth.js for user authentication. (app) argument ensures that Express is available in auth.js
+let auth = require('./auth')(app);
+
 // Set up logging using morgan
 app.use(morgan('common'));
-
-// Sample data for top movies
-let topMovies = [
-    {
-        title: "Lord of the Rings",
-        genre: "Fantasy"
-    },
-    {
-        title: "Star Wars",
-        genre: "Sci-Fi"
-    },
-    {
-        title: "Back to the Future",
-        genre: "Sci-Fi"
-    },
-    {
-        title: "Gladiator",
-        genre: "Fantasy"
-    },
-    {
-        title: "Pokemon: The Movie",
-        genre: "Kids"
-    }
-];
 
 // Serve static files from the public folder (at this stage, specifically for documentation.html)
 app.use(express.static('public'));
@@ -50,7 +34,8 @@ app.get('/', (req, res) => {
 });
 
 // GET route for endpoint /movies - will return a list of all movies
-app.get('/movies', (req, res) => {
+// passport.authenticate() will run the authenticate function and ensure a user is logged in
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Find all movies in the database (db.movies), then either return a success status with json formatted movies, or run the error catching function
     Movies.find().then((movies) => {
         res.status(201).json(movies);
@@ -61,7 +46,7 @@ app.get('/movies', (req, res) => {
 });
 
 // GET route for endpoint /movies/:Title - will return detailed data about a specific movie by title
-app.get('/movies/:Title', (req, res) => {
+app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Find a matching movie based on the title, then send the movie details in json format to the client
     Movies.findOne({ Title: req.params.Title }).then((movie) => {
         res.json(movie);
@@ -73,7 +58,7 @@ app.get('/movies/:Title', (req, res) => {
 });
 
 // GET route for endpoint /movies/:Genre - will return detailed data about a movie genre by genre name
-app.get('/movies/genres/:Genre', (req, res) => {
+app.get('/movies/genres/:Genre', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Find a matching genre based on the genre name passed in the URL, then send the genre details in json format to the client
     // This will be found from the db.movies collection, but we will obtain all information about a genre we need from a single entry
     Movies.findOne({ 'Genre.Name': req.params.Genre }).then((movie) => {
@@ -86,7 +71,7 @@ app.get('/movies/genres/:Genre', (req, res) => {
 });
 
 // GET route for endpoint /movies/directors/:Director - will return detailed data about a director by name
-app.get('/movies/directors/:Director', (req, res) => {
+app.get('/movies/directors/:Director', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Find a matching director based on the director name passed in the URL, then send the director details in json format ot the client
     // This will be found from the db.mobies collection, but we will obtain all information about a genre we need from a single entry
     Movies.findOne({ 'Director.Name': req.params.Director }).then((movie) => {
@@ -137,7 +122,7 @@ app.post('/users', (req, res) => {
 });
 
 // GET route for endpoint users/ - will return a list of all users in the database
-app.get('/users', (req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Find all users in the database (db.users), then either return a success status with the json formatted users, or run the error catching function
     Users.find().then((users) => {
         res.status(201).json(users);
@@ -148,7 +133,7 @@ app.get('/users', (req, res) => {
 });
 
 // GET route for endpoint usres/:Username - will return the details for a single user by username
-app.get('/users/:Username', (req, res) => {
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Find a matching user based on the username, then send the user in json format to the client
     Users.findOne({ Username: req.params.Username }).then((user) => {
         res.json(user);
@@ -168,7 +153,7 @@ app.get('/users/:Username', (req, res) => {
     Email: String (required),
     Birthday: Date
 } */
-app.put('/users/:Username', (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Use the findOneAndUpdate function to find the user document based on the username, then update it using $set:
     Users.findOneAndUpdate({ Username: req.params.Username }, { $set: 
         {
@@ -190,7 +175,7 @@ app.put('/users/:Username', (req, res) => {
 });
 
 // POST route for endpoint /users/:Username/Movies/:MovieID - will allow a user to add a movie to their list of favourites by movie title
-app.post('/users/:Username/Movies/:MovieID', (req, res) => {
+app.post('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Find and updated one user document based on given username
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         // Push will add a new movie ID to the FavouriteMovies array
@@ -208,7 +193,7 @@ app.post('/users/:Username/Movies/:MovieID', (req, res) => {
 });
 
 // DELETE route for endpoint users/:Username/Movies/:MovieID - will allow a user to remove a movie from their list of favourites by movie title
-app.delete('/users/:Username/Movies/:MovieID', (req, res) => {
+app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Find and update one user document based on a given username
     Users.findOneAndUpdate({ Username: req.params.Username }, {
         // Pull will remove this movie ID from the FavouriteMovies array
@@ -226,7 +211,7 @@ app.delete('/users/:Username/Movies/:MovieID', (req, res) => {
 });
 
 // DELETE route for endpoint users/:Username - will allow a user to deregister
-app.delete('/users/:Username', (req, res) => {
+app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Use findOneAndRemove to find a user document by Username and then delete it
     Users.findOneAndRemove({ Username: req.params.Username }).then((user) => {
         // If no user is found, return the message that it wasn't found
