@@ -1,5 +1,6 @@
 // Import Mongoose
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'),
+    bcrypt = require('bcrypt');
 
 // Set up movieSchema structure
 let movieSchema = mongoose.Schema({
@@ -40,6 +41,16 @@ let userSchema = mongoose.Schema({
     // FavouriteMovies is an array of ID references to the db.movies collection through the ref:'Movie' field
     FavouriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
 });
+
+// Function for hashing submitted passwords
+userSchema.statics.hashPassword = (password) => {
+    return bcrypt.hashSync(password, 10);
+};
+
+// Function for comparing submitted hashed passwords with hashed passwords stored in the database
+userSchema.methods.validatePassword = function(password) {
+    return bcrypt.compareSync(password, this.Password);
+};
 
 // Create the movies and users models. These names will be converted to lowercase and plural automatically
 let Movie = mongoose.model('Movie', movieSchema);

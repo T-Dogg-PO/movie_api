@@ -4,7 +4,9 @@ const express = require('express'),
     morgan = require('morgan'),
     mongoose = require('mongoose'),
     Models = require('./models.js'),
-    passport = require('passport');
+    passport = require('passport'),
+    cors = require('cors'),
+    { check, validationResult } = require('express-validator');
 
 require('./passport');
 
@@ -16,6 +18,9 @@ const Users = Models.User;
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
+
+// Specifies that app uses CORS (cross-origin resource sharing). Allows requests from all origins for now
+app.use(cors());
 
 app.use(bodyParser.json());
 
@@ -92,7 +97,20 @@ app.get('/movies/directors/:Director', passport.authenticate('jwt', { session: f
     Email: String,
     Birthday: Date
 } */
-app.post('/users', (req, res) => {
+// First we will validate the submitted data (through the second argument of the POST request)
+app.post('/users', [check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()], (req, res) => {
+    // Check the validation object for errors
+    let errors = validationResult(req);
+    // If errors are present, return a 422 response with errors in a JSON object
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    };
+
+    // Hash the submitted password
+    let hashedPassword = Users.hashPassword(req.body.Password);
     // Check to see if the given Username is already taken in db.users
     Users.findOne({ Username: req.body.Username })
     .then((user) => {
@@ -103,7 +121,7 @@ app.post('/users', (req, res) => {
         } else {
             Users.create({
                 Username: req.body.Username,
-                Password: req.body.Password,
+                Password: hashedPassword,
                 Email: req.body.Email,
                 Birthday: req.body.Birthday
             // Callback to send response to client with status code and the document for the new User
@@ -234,7 +252,8 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-// Listen on port 8080
-app.listen(8080, () => {
-    console.log('My app is listening on port 8080');
+// Listen for pre-configured port in environment variables, or sets to default of 8080
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+    console.log('Listening on port ' + port);
 });

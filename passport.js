@@ -16,7 +16,7 @@ passport.use(new LocalStrategy({
     passwordField: 'Password'
 }, (username, password, callback) => {
     console.log(username + ' ' + password);
-    // Use  Mongoose to check database for matching user (just username at this stage)
+    // Use  Mongoose to check database for matching user
     Users.findOne({ Username: username }, (error, user) => {
         if (error) {
             console.log(error);
@@ -25,7 +25,13 @@ passport.use(new LocalStrategy({
 
         if (!user) {
             console.log('incorrect username');
-            return callback(null, false, {message: 'Incorrect username or password.'});
+            return callback(null, false, {message: 'Incorrect username.'});
+        }
+
+        // Calling the validatePassword function from models.js to hash and compare passwords
+        if (!user.validatePassword(password)) {
+            console.log('Incorrect password.');
+            return callback(null, false, {message: 'Incorrect password.'});
         }
 
         // If match is found without errors, the callback function for the login endpoint will be executed
