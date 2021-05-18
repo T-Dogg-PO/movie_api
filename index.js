@@ -174,12 +174,25 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
     Email: String (required),
     Birthday: Date
 } */
-app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), [check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()], (req, res) => {
+    // Check the validation object for errors
+    let errors = validationResult(req);
+    // If errors are present, return a 422 response with errors in a JSON object
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    };
+
+    // Hash the submitted password
+    let hashedPassword = Users.hashPassword(req.body.Password);
+
     // Use the findOneAndUpdate function to find the user document based on the username, then update it using $set:
     Users.findOneAndUpdate({ Username: req.params.Username }, { $set: 
         {
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
         }
