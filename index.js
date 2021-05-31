@@ -43,7 +43,10 @@ app.get('/', (req, res) => {
 
 // GET route for endpoint /movies - will return a list of all movies
 // passport.authenticate() will run the authenticate function and ensure a user is logged in
-app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+// TEMPORARILY removed the authentication middleware so that I can test the client-side ajax request for this endpoint
+// , passport.authenticate('jwt', { session: false })
+app.get('/movies', (req, res) => {
     // Find all movies in the database (db.movies), then either return a success status with json formatted movies, or run the error catching function
     Movies.find().then((movies) => {
         res.status(201).json(movies);
