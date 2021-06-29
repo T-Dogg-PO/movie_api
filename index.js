@@ -102,7 +102,7 @@ app.get('/movies/directors/:Director', passport.authenticate('jwt', { session: f
 } */
 // First we will validate the submitted data (through the second argument of the POST request)
 app.post('/users', [check('Username', 'Username is required').isLength({min: 5}),
-    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphaNumeric(),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid').isEmail()], (req, res) => {
     // Check the validation object for errors
@@ -175,7 +175,7 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
     Birthday: Date
 } */
 app.put('/users/:Username', passport.authenticate('jwt', { session: false }), [check('Username', 'Username is required').isLength({min: 5}),
-    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphaNumeric(),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid').isEmail()], (req, res) => {
     // Check the validation object for errors
