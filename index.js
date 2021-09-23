@@ -14,6 +14,9 @@ require('./passport');
 const Movies = Models.Movie;
 const Users = Models.User;
 
+
+
+mongoose.set('bufferCommands', false);
 // Connect to our Mongo database through mongoose
 // Local connection
 // mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
